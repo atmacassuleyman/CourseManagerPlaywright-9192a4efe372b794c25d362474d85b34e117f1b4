@@ -1,0 +1,17 @@
+{
+  "name": "coursemanagerplaywright",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "devDependencies": {
+    "@faker-js/faker": "^9.2.0",
+    "@playwright/test": "^1.48.2",
+    "@types/faker": "^6.6.8",
+    "@types/node": "^22.8.7"
+  }
+}
