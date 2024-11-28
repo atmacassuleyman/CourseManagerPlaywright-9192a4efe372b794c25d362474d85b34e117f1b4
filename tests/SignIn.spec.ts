@@ -12,7 +12,7 @@ test.describe('Sign In Page', () => {
         expect(await signInPage.isSignInButtonDisabled()).toBeTruthy(); // Assert Sign In button is disabled
 });
 
-test('US-01 Sign In Button is Disabled', async ({})=>
+test('US-06 Sign In Button is Disabled', async ({})=>
     {
         // Fill only password and check for email required message
         await signInPage.clickEmail();
@@ -32,7 +32,7 @@ test('US-01 Sign In Button is Disabled', async ({})=>
 
     });
 
-test('US-02 Invalid e-mail or password', async ({})=>
+test('US-07 Invalid e-mail or password', async ({})=>
     {
         // Attempt login with invalid credentials
         await signInPage.fillCredentials('suleyma.atmaca@emm-it.de', 'T%T%633642945806');
@@ -48,7 +48,7 @@ test('US-02 Invalid e-mail or password', async ({})=>
         console.log(errorMessage2);
     });
 
-test('US-03 Verify sign in fields accepts valid format', async ({page})=>
+test('US-08 Verify sign in fields accepts valid format', async ({page})=>
     {
         // Fill email and verify email error message is hidden
         await signInPage.fillEmail('suleyman.atmaca@emm-it.de');
@@ -60,13 +60,13 @@ test('US-03 Verify sign in fields accepts valid format', async ({page})=>
         await signInPage.clickSignInButton();
     });  
 
-test('US-04 Verify "Not registered yet?" link is correct', async ({page})=>
+test('US-09 Verify "Not registered yet?" link is correct', async ({page})=>
     {
         await signInPage.clickNotRegisteredLink();
         await signInPage.verifySignUpPage();
     });  
 
-test('US-05 Verify page layout and UI elements', async ({page})=>
+test('US-10 Verify page layout and UI elements', async ({page})=>
     {
         // Verify UI elements are visible
         await signInPage.verifyLogoIsVisible();
@@ -76,7 +76,7 @@ test('US-05 Verify page layout and UI elements', async ({page})=>
         await signInPage.verifyNotRegisteredLinkIsVisible();
     });
 
-test('US-06 Verify Sign In input boxes place holder texts are not bold font', async ({page})=>
+test('US-11 Verify Sign In input boxes place holder texts are not bold font', async ({page})=>
     {
         // Verify placeholder text font weight for email and password fields
         const isEmailPlaceholderBold = await signInPage.isEmailPlaceholderBold();
@@ -87,7 +87,7 @@ test('US-06 Verify Sign In input boxes place holder texts are not bold font', as
         expect(isPasswordPlaceholderBold).toBe(false);
     });
 
-test('US-07 Sign In With Correct Credentials', async ({page})=>
+test('US-12 Sign In With Correct Credentials', async ({page})=>
     {
         await signInPage.signInWithCredentials('suleyman.atmaca@emm-it.de', 'T%633642945806oc');
         

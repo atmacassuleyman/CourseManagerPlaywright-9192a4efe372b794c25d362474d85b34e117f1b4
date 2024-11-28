@@ -12,15 +12,19 @@ export class BasePage {
     await this.page.goto(config.baseURL);
 }
 
-async navigateToSignUpPage(): Promise<void> {
-  await this.page.goto(config.signUpPage);
-}
-
-async getTitle(expectedTitle?: string): Promise<string> {
-  const title = await this.page.title();
-  if (expectedTitle) {
-      await expect(this.page).toHaveTitle(expectedTitle); // Assertion
+  async navigateToSignUpPage(): Promise<void> {
+    await this.page.goto(config.signUpPage);
   }
-  return title;
-}
+
+  async getTitle(expectedTitle?: string): Promise<string> {
+    const title = await this.page.title();
+    if (expectedTitle) {
+        await expect(this.page).toHaveTitle(expectedTitle); // Assertion
+    }
+    return title;
+  }
+
+  // async clickByRole(role: string, name: string, exact = false): Promise<void> {
+  //   await this.page.getByRole(role, { name, exact }).click();
+  // }
 }

@@ -12,7 +12,7 @@ test.describe('Sign Up Page', () => {
     await expect(page).toHaveTitle('EMM-IT | Course Manager');
   });
 
-test('US-1 Sign Up Button is Disabled', async ({ }) => {
+test('US-01 Sign Up Button is Disabled', async ({ }) => {
   //verify Sign Up Button is Disabled if only the userPassword is filled
   await signUpPage.fillSignUpCredentials('', 'Ab123@Ab123@', '');
   expect(await signUpPage.isSignUpButtonDisabled()).toBeTruthy();
@@ -47,7 +47,7 @@ test('US-1 Sign Up Button is Disabled', async ({ }) => {
   expect(await signUpPage.isSignUpButtonDisabled()).toBeTruthy();
   });
 
-test('US-2 Unable to Sign Up without correct credentials', async ({ }) => {
+test('US-02 Unable to Sign Up without correct credentials', async ({ }) => {
   // Invalid email format
   await signUpPage.fillSignUpCredentials('ss.atm-it.de', 'Ab123@Ab123@', 'Ab123@Ab123@');
   console.log(await signUpPage.getInvalidEmailErrorMessage());
@@ -92,12 +92,12 @@ test('US-2 Unable to Sign Up without correct credentials', async ({ }) => {
   expect(await signUpPage.isSignUpButtonDisabled()).toBeTruthy();
   });
 
-test('US-3 Redirect to the Sign In page', async ({  }) => {
+test('US-03 Redirect to the Sign In page', async ({  }) => {
   await signUpPage.navigateToSignUpPage();
   await signUpPage.clickSignInLink();
   });
 
-test('US-4 Verify Sign Up input boxes place holder texts are not bold font', async ({  }) => {
+test('US-04 Verify Sign Up input boxes place holder texts are not bold font', async ({  }) => {
   await signUpPage.navigateToSignUpPage();
 
   // Verify placeholder text font weight for email and password fields
@@ -111,7 +111,7 @@ test('US-4 Verify Sign Up input boxes place holder texts are not bold font', asy
   expect(isConfirmPasswordPlaceholderBold).toBe(false);
   });
 
-test('US-5 Sign Up With Correct Credentials', async ({ page}) => {
+test('US-05 Sign Up With Correct Credentials', async ({ page}) => {
   await signUpPage.navigateToSignUpPage();
   const userEmail = page.locator('#email');
   const randomEmail = faker.internet.email();
