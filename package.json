@@ -10,7 +10,7 @@
   "type": "module",
   "devDependencies": {
     "@faker-js/faker": "^9.2.0",
-    "@playwright/test": "^1.48.2",
+    "@playwright/test": "^1.49.0",
     "@types/faker": "^6.6.8",
     "@types/node": "^22.8.7"
   }
