@@ -11,7 +11,7 @@ test.describe('Sign Up Page', () => {
     await expect(page).toHaveTitle('EMM-IT | Course Manager');
   });
 
-test('US-35 All certificate inout box labels should listed ', async ({ browser }) => {
+test('US-35 All certificate input box labels should listed ', async ({ browser }) => {
 
   const welcomeText = await settingsCertificate.getHomePageWelcomeText();
         console.log(welcomeText);
