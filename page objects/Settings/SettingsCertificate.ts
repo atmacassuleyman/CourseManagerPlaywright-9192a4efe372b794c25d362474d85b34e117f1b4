@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
-import { config } from "../playwright.config";
-import { BasePage } from "./BasePage";
+import { config } from "../../playwright.config";
+import { BasePage } from "../BasePage";
 
 
 export class SettingsCertificate extends BasePage{
@@ -21,6 +21,7 @@ export class SettingsCertificate extends BasePage{
     private homePageWelcomeText = this.page.getByText('Welcome to our application EMM-IT GmbH!');
     private updateButton = this.page.getByRole('button', { name: 'Update' });
     public successPopupMessage  = this.page.getByRole('heading', { name: 'Certificate Texts has been updated succesfully!' });
+    public failedPopupMessage = this.page.getByRole('heading' , {name: 'Certificate Texts has been updated succesfully!' });
     private mainTextWarningIcon = this.page.locator('form').getByRole('img').first();
     private mainTextWarningMessage = this.page.getByText("You should not delete or change '${certTypeName}' from the main text!");
     private referenceTextWarningIcon = this.page.locator('form').getByRole('img').nth(1);
@@ -40,35 +41,35 @@ export class SettingsCertificate extends BasePage{
         await this.updateButton.click();
     };
 
-    // Method to click the 'Update' button until the success message appears
-    // async clickUpdateUntilSuccess(maxRetries: number = 3): Promise<void> {
-    // let attempts = 0;
+    //Method to click the 'Update' button until the success message appears
+    async clickUpdateUntilSuccess(maxRetries: number = 3): Promise<void> {
+    let attempts = 0;
 
-    // while (attempts < maxRetries) {
-    //   attempts++;
-    //   try {
-    //     // Click the update button
-    //     await this.updateButton.click();
+    while (attempts < maxRetries) {
+      attempts++;
+      try {
+        // Click the update button
+        await this.updateButton.click();
         
-    //     // Wait for the success message to appear
-    //     await this.successPopupMessage.waitFor({ state: 'visible', timeout: 100 });
+        // Wait for the success message to appear
+        await this.successPopupMessage.waitFor({ state: 'visible', timeout: 2000 });
 
-    //     // If success message appears, exit the loop
-    //     console.log('Success popup appeared!');
-    //     return;
-    //   } catch (error) {
-    //     // If the success message is not found, retry
-    //     console.log(`Attempt ${attempts} failed, retrying...`);
-    //   }
-    // }
-    // throw new Error('Failed to find success popup after maximum retries');
-    // };
+        // If success message appears, exit the loop
+        console.log('Success popup appeared!');
+        return;
+      } catch (error) {
+        // If the success message is not found, retry
+        console.log(`Attempt ${attempts} failed, retrying...`);
+      }
+    }
+    throw new Error('Failed to find success popup after maximum retries');
+    };
 
     async getHomePageWelcomeText(): Promise<string | null> {
         return await this.homePageWelcomeText.textContent();
     };
 
-    async verifyCertificateDetails(): Promise<void> {
+    async verifyCertificateLabels(): Promise<void> {
         await this.trainingManagerName.isVisible();
         await this.easaText.isVisible();
         await this.placeOfBirth.isVisible();
@@ -80,49 +81,53 @@ export class SettingsCertificate extends BasePage{
         await this.certificateTitle.isVisible();
     };
 
-    async navigateToCertificateSection(): Promise<void> {
+    async navigateToSettingsCertificateTab(): Promise<void> {
         await this.settingsButton.click();
         await this.certificateLink.click();
     };
 
     /**
- * Validate input error message dynamically for input fields after clearing and restoring text
- * @param inputTextTitle - The title attribute of the input field
- * @param inputPlaceholder - The placeholder attribute of the input field
- * @param expectedInputErrorMessage - The expected error message to validate
- * @param defaultInputText - The default value of the input field to restore after validation
- */
-    async validateErrorMessageAndRestoreInput(
+     * Validate input error message dynamically for input fields after clearing and restoring text
+     * @param inputTextTitle - The title attribute of the input field
+     * @param inputPlaceholder - The placeholder attribute of the input field
+     * @param expectedInputErrorMessage - The expected error message to validate
+     * @param defaultInputText - The default value of the input field to restore after validation
+     */
+    async validateInputErrorMessageAndRestoreDefaultInput(
         inputTextTitle: string,
         inputPlaceholder: string,
-        expectedInputErrorMessage: string,
+        //expectedInputErrorMessage: string,
         defaultInputText: string
         ): Promise<void> {
         const inputField = this.page.locator(`i:has-text("${inputTextTitle}")`);
-        //await page.getByText('Training Manager Name').click();
         const placeholderField = this.page.locator(`input[placeholder="${inputPlaceholder}"]`);
-        //const errorMessageLocator = this.page.locator(`text="${expectedInputErrorMessage}"`);
+        //const errorMessageLocator = this.page.locator(`i:has-text("${expectedInputErrorMessage}")`);
+        const defaultInputTextMessage = this.page.locator(`text="${defaultInputText}"`);
+        
+        // Clear the input field
+        await inputField.press('Backspace');
 
         // Ensure the input field exists and is visible
         await expect(inputField).toBeVisible();
+        console.log(inputField);
 
-        // Step 1: Clear the input field
-        await inputField.fill('');
+        //Validate the error message is displayed
+        // await expect(errorMessageLocator).toBeVisible();
+        // console.log(errorMessageLocator);
 
-        // Step 2: Trigger validation by blurring the input field
-        await inputField.blur();
+        // Validate the placeholder is displayed
+        await expect(placeholderField).toBeVisible();
+        console.log(placeholderField);
 
-        // Step 3: Validate the error message is displayed
-        //await expect(errorMessageLocator).toBeVisible();
-
-        // Step 4: Restore the original value in the input field
+        // Restore the original value in the input field
         await inputField.fill(defaultInputText);
+        console.log(defaultInputTextMessage);
 
         // Optionally validate that the error message is no longer displayed
         //await expect(errorMessageLocator).not.toBeVisible();
     };
 
-    async mainTextHoverAndGetWarningMessage(): Promise<string | null> {
+    async mainTextWarningIconHover(): Promise<string | null> {
         // Hover over the warning icon
         await this.mainTextWarningIcon.hover();
 
@@ -130,9 +135,9 @@ export class SettingsCertificate extends BasePage{
         await this.mainTextWarningMessage.waitFor({ state: 'visible', timeout: 5000 });
         // Return the warning message text
         return await this.mainTextWarningMessage.textContent();
-    }
+    };
 
-    async referenceTextHoverAndGetWarningMessage(): Promise<string | null> {
+    async referenceTextWarningIconHover(): Promise<string | null> {
 
         await this.referenceTextWarningIcon.hover();
 
@@ -140,5 +145,36 @@ export class SettingsCertificate extends BasePage{
         await this.referenceTextWarningMessage.waitFor({ state: 'visible', timeout: 5000 });
         // Return the warning message text
         return await this.referenceTextWarningMessage.textContent();
-    }
+    };
+
+
+
+    //   /**
+    //  * @param expectedInputErrorMessage
+    //  * @param defaultInputText 
+    //  */
+    //   async validateErroPopup(
+    //     expectedInputErrorMessage: string,
+    //     defaultInputText: string
+    //     ): Promise<void> {
+    //     const inputField = this.page.locator(`i:has-text("${inputTextTitle}")`);
+    //     // Ensure the input field exists and is visible
+    //     await expect(inputField).toBeVisible();
+
+    //     // Step 1: Clear the input field
+    //     await inputField.fill('');
+
+    //     // Step 2: Trigger validation by blurring the input field
+    //     await inputField.blur();
+
+    //     // Step 3: Validate the error message is displayed
+    //     //await expect(errorMessageLocator).toBeVisible();
+
+    //     // Step 4: Restore the original value in the input field
+    //     await inputField.fill(defaultInputText);
+
+    //     // Optionally validate that the error message is no longer displayed
+    //     //await expect(errorMessageLocator).not.toBeVisible();
+    // };
+
     }; 

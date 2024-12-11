@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { SignUpPage } from '../pages/SignUp';
+import { SignUpPage } from '../page objects/SignUp';
 
 test.describe('Sign Up Page', () => {
   let signUpPage: SignUpPage;
@@ -13,33 +13,33 @@ test.describe('Sign Up Page', () => {
   });
 
 test('US-01 Sign Up Button is Disabled', async ({ }) => {
-  //verify Sign Up Button is Disabled if only the userPassword is filled
-  await signUpPage.fillSignUpCredentials('', 'Ab123@Ab123@', '');
+  await signUpPage.fillSignUpCredentials('','','');
   expect(await signUpPage.isSignUpButtonDisabled()).toBeTruthy();
 
-  //verify Sign Up Button is Disabled if only the userEmail is filled
+  await signUpPage.fillSignUpCredentials('', 'Ab123@Ab123@', 'Ab123@Ab123@');
+  expect(await signUpPage.isSignUpButtonDisabled()).toBeTruthy();
+
+  await signUpPage.fillSignUpCredentials('Abc123@123.com', '', '');
+  expect(await signUpPage.isSignUpButtonDisabled()).toBeTruthy();
+
   await signUpPage.navigateToSignUpPage();
   await signUpPage.fillSignUpCredentials('ss.atm@emm-it.de', '', '');
   expect(await signUpPage.isSignUpButtonDisabled()).toBeTruthy();
 
-  //verify Sign Up Button is Disabled if only the userConfirmPassword is filled
   await signUpPage.navigateToSignUpPage();
   await signUpPage.fillSignUpCredentials('', '', 'Ab123@Ab123@');
   expect(await signUpPage.isSignUpButtonDisabled()).toBeTruthy();
 
-  //getEmailRequiredErrorMessage
   await signUpPage.navigateToSignUpPage();
   await signUpPage.fillSignUpCredentials('', 'Ab123@Ab123@', 'Ab123@Ab123@');
   console.log(await signUpPage.getEmailRequiredErrorMessage());
   expect(await signUpPage.isSignUpButtonDisabled()).toBeTruthy();
 
-  //getPasswordRequiredErrorMessage
   await signUpPage.navigateToSignUpPage();
   await signUpPage.fillSignUpCredentials('ss.atm@emm-it.de', '', 'Ab123@Ab123@');
   console.log(await signUpPage.getPasswordRequiredErrorMessage());
   expect(await signUpPage.isSignUpButtonDisabled()).toBeTruthy();
 
-  //getConfirmPasswordRequiredMessage
   await signUpPage.navigateToSignUpPage();
   await signUpPage.fillSignUpCredentials('ss.atm@emm-it.de', 'Ab123@Ab123@', '');
   await signUpPage.userPasswordInput();
