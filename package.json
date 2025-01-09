@@ -9,10 +9,10 @@
   "description": "",
   "type": "module",
   "devDependencies": {
-    "@faker-js/faker": "^9.2.0",
-    "@playwright/test": "^1.49.0",
+    "@faker-js/faker": "^9.3.0",
+    "@playwright/test": "^1.49.1",
     "@types/faker": "^6.6.8",
     "@types/jquery": "^3.5.32",
-    "@types/node": "^22.8.7"
+    "@types/node": "^22.10.5"
   }
 }

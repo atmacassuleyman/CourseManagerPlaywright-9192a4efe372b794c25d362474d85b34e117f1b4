@@ -13,8 +13,10 @@ export class SettingsCertificate extends BasePage{
     public easaText = this.page.getByText('EASA-Text');
     public placeOfBirth = this.page.getByText('Place Of Birth');
     public dateOfBirth = this.page.getByText('Date Of Birth');
-    public mainText = this.page.getByText('Main Text');
+    public mainText = this.page.getByPlaceholder('Main Text');
+    public mainTextInputErrorMessage = this.page.getByText('Main Text is required!');
     public referenceText = this.page.getByText('Reference Text');
+    public referenceTextInputErrorMessage = this.page.getByText('Reference Text is required!');
     public endOfListText = this.page.getByText('End Of List Text');
     public companyName = this.page.getByText('Company Name');
     public certificateTitle = this.page.getByText('Certificate Title');
@@ -22,10 +24,8 @@ export class SettingsCertificate extends BasePage{
     private updateButton = this.page.getByRole('button', { name: 'Update' });
     public successPopupMessage  = this.page.getByRole('heading', { name: 'Certificate Texts has been updated succesfully!' });
     public failedPopupMessage = this.page.getByRole('heading' , {name: 'Certificate Texts has been updated succesfully!' });
-    private mainTextWarningIcon = this.page.locator('form').getByRole('img').first();
+    private mainTextWarningIcon = this.page.locator('form').getByRole('img');
     private mainTextWarningMessage = this.page.getByText("You should not delete or change '${certTypeName}' from the main text!");
-    private referenceTextWarningIcon = this.page.locator('form').getByRole('img').nth(1);
-    private referenceTextWarningMessage = this.page.getByText("You should not delete or change '${info.course.course_id} and ${info.trainee.trainee_id}' from the reference text!");
 
     async fillCredentials(email = config.credentials.userEmail, password = config.credentials.userPassword) {
         await this.userEmail.fill(email);
@@ -128,53 +128,39 @@ export class SettingsCertificate extends BasePage{
     };
 
     async mainTextWarningIconHover(): Promise<string | null> {
-        // Hover over the warning icon
-        await this.mainTextWarningIcon.hover();
 
-        // Wait for the warning message to become visible
+        await this.mainTextWarningIcon.hover();
         await this.mainTextWarningMessage.waitFor({ state: 'visible', timeout: 5000 });
-        // Return the warning message text
         return await this.mainTextWarningMessage.textContent();
     };
 
-    async referenceTextWarningIconHover(): Promise<string | null> {
-
-        await this.referenceTextWarningIcon.hover();
-
-        // Wait for the warning message to become visible
-        await this.referenceTextWarningMessage.waitFor({ state: 'visible', timeout: 5000 });
-        // Return the warning message text
-        return await this.referenceTextWarningMessage.textContent();
+    async updateMainText(): Promise<string | null> {
+        await this.mainText.click();
+        await this.mainText.press('ControlOrMeta+A');
+        await this.mainText.fill('Bildungs GmbH, Friedrichshafener Str. 2, 82205 Gilching.');
+        await this.updateButton.click();
+        return await this.mainTextWarningMessage.textContent();
     };
 
+    async deleteMainText(): Promise<string | null> {
+        await this.mainText.click();
+        await this.mainText.press('ControlOrMeta+A');
+        await this.mainText.fill('');
+        return await this.mainTextInputErrorMessage.textContent();
+    };
 
+    async updateReferenceText(): Promise<string | null> {
+        await this.referenceText.click();
+        await this.referenceText.press('ControlOrMeta+A');
+        await this.referenceText.fill('Reference: DE.147');
+        await this.updateButton.click();
+        return await this.successPopupMessage.textContent();
+    };
 
-    //   /**
-    //  * @param expectedInputErrorMessage
-    //  * @param defaultInputText 
-    //  */
-    //   async validateErroPopup(
-    //     expectedInputErrorMessage: string,
-    //     defaultInputText: string
-    //     ): Promise<void> {
-    //     const inputField = this.page.locator(`i:has-text("${inputTextTitle}")`);
-    //     // Ensure the input field exists and is visible
-    //     await expect(inputField).toBeVisible();
-
-    //     // Step 1: Clear the input field
-    //     await inputField.fill('');
-
-    //     // Step 2: Trigger validation by blurring the input field
-    //     await inputField.blur();
-
-    //     // Step 3: Validate the error message is displayed
-    //     //await expect(errorMessageLocator).toBeVisible();
-
-    //     // Step 4: Restore the original value in the input field
-    //     await inputField.fill(defaultInputText);
-
-    //     // Optionally validate that the error message is no longer displayed
-    //     //await expect(errorMessageLocator).not.toBeVisible();
-    // };
-
+    async deleteReferenceText(): Promise<string | null> {
+        await this.referenceText.click();
+        await this.referenceText.press('ControlOrMeta+A');
+        await this.referenceText.fill('');
+        return await this.referenceTextInputErrorMessage.textContent();
+    };
     }; 

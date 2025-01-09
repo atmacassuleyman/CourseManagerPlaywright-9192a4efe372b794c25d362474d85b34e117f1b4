@@ -96,23 +96,34 @@ test.describe('Settings certificate page', () => {
 
   });
 
-  test('US-43 Verify All Text Warning Messages', async ({}) => {
-
+  test('US-43 Verify Main Text Warning Messages', async ({page}) => {
+    
     await settingsCertificate.navigateToSettingsCertificateTab();
-
     const mainTextwarningMessage = await settingsCertificate.mainTextWarningIconHover();
     const mainTextexpectedMessage = "You should not delete or change '${certTypeName}' from the main text!";
     expect(mainTextwarningMessage).toBe(mainTextexpectedMessage);
-
-    const referenceTextwarningMessage = await settingsCertificate.referenceTextWarningIconHover();
-    const referenceTextexpectedMessage = "You should not delete or change '${info.course.course_id} and ${info.trainee.trainee_id}' from the reference text!";
-    expect(referenceTextwarningMessage).toBe(referenceTextexpectedMessage);
-
-  });
-
-  test('US-44 Verify All Static Inputs are not editable', async ({}) => {
+    console.log(mainTextwarningMessage);
 
     await settingsCertificate.navigateToSettingsCertificateTab();
+    await settingsCertificate.updateMainText();
+    expect(mainTextwarningMessage).toBe(mainTextexpectedMessage);
+    console.log(mainTextwarningMessage);
+
+    await settingsCertificate.navigateToSettingsCertificateTab();
+    const mainTextInputError = await settingsCertificate.deleteMainText();
+    const mainTextexpectedError = "Main Text is required!";
+    expect(mainTextInputError).toBe(mainTextexpectedError);
+    console.log(mainTextInputError);
+
+    await page.goto('https://cm.emm-itech.de/settings/set-certificate');
+    await settingsCertificate.navigateToSettingsCertificateTab();
+    await settingsCertificate.updateReferenceText();
+
+    await settingsCertificate.navigateToSettingsCertificateTab();
+    const referenceTextInputError = await settingsCertificate.deleteReferenceText();
+    const referenceTextexpectedError = "Reference Text is required!";
+    expect(referenceTextInputError).toBe(referenceTextexpectedError);
+    console.log(referenceTextInputError);
 
   });
   

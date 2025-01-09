@@ -14,7 +14,7 @@ test.describe('Settings certificate page', () => {
       await settingsCategory.navigateToSettingsCategoryTab();
     });
 
-    test('US-45 All certificate input box labels should listed', async ({}) => {
+    test('US-44 All certificate input box labels should listed', async ({}) => {
       await settingsCategory.verifySearchModuleInput();
       await settingsCategory.verifyAllModulesList();
       await settingsCategory.verifySelectedDeleteButtonsVisible();
@@ -31,7 +31,7 @@ test.describe('Settings certificate page', () => {
 
     });
 
-    test.only('US-46 Verify click buttons give expected results', async ({}) => {
+    test.only('US-45 Verify click buttons give expected results', async ({}) => {
       const selectCategoryPopup = await settingsCategory.pleaseSelectCategory();
       console.log(selectCategoryPopup);
 
